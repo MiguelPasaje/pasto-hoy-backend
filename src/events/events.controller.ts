@@ -36,6 +36,7 @@ export class EventsController {
 
     @Delete(":id")
     removeEvent(@Param("id") id:string){
-        this.removeEvent(id)
+        this.service.delete(id)   
+
     }
 }

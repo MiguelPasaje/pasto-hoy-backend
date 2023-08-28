@@ -4,7 +4,7 @@ import { EventDto } from './dto/event.dto';
 
 @Injectable()
 export class EventsService {
-
+   
     events: EventDto[] = []
 
     add(event:EventDto){
@@ -17,15 +17,21 @@ export class EventsService {
             return
         }
 
-        this.events.splice(index,1)
+        //this.events.splice(index,1)
+        this.events[index] = { ...this.events[index], ...event };
     }
 
     get(page:number, pageSize: number): EventDto[]{
+        console.log(page,pageSize);
         return this.events
     }
 
     getById(id: string): EventDto | undefined{
         return this.events.find((e)=> e.id == id)
+    }
+
+    delete(id: string) {
+        this.events = this.events.filter((event)=> event.id !== id)
     }
 
 }
