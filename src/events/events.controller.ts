@@ -2,6 +2,7 @@
 import { Body, Controller, Post, Get, Query, Param, Delete, Put, NotFoundException } from '@nestjs/common';
 import { EventDto } from './dto/event.dto';
 import { EventsService } from './events.service';
+import { Public } from 'src/auth/public.setMetadata';
 
 @Controller('events')
 export class EventsController {
@@ -13,6 +14,7 @@ export class EventsController {
         this.service.add(event)
     }
 
+    @Public()
     @Get()
     getEvents(@Query("page") page?: number, @Query("page_size") pageSize?: number): EventDto[]{
         return this.service.get(page ?? 1, pageSize ?? 50 )
