@@ -2,6 +2,7 @@
 import { Body, Controller, Post, Get, Query, Param, Delete, Put, NotFoundException } from '@nestjs/common';
 import { PlansService } from './plans.service';
 import { PlansDto } from './dto/plans.dto';
+import { Public } from 'src/auth/public.setMetadata';
 
 
 @Controller('plans')
@@ -14,6 +15,7 @@ export class PlansController {
         this.service.add(plan)
     }
 
+    @Public()
     @Get()
     getPlans(@Query("page") page?: number, @Query("page_size") pageSize?: number): PlansDto[]{
         return this.service.get(page ?? 1, pageSize ?? 50 )
