@@ -1,14 +1,21 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { EventDto } from './dto/event.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Events } from './interfaces/events.interface';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class EventsService {
+
+    constructor(@InjectModel('Events') private readonly eventModel: Model<Events> ){}
    
     events: EventDto[] = []
 
-    add(event:EventDto){
-        this.events.push(event)
+    async add(createEvent:EventDto):Promise<Events>{
+        const newEvents = new this.eventModel(createEvent)
+        return await newEvents.save()
+        //this.events.push(event)
     }
 
     update(id:string,event:EventDto){

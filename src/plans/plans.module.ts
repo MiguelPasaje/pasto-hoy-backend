@@ -8,7 +8,7 @@ import { PlanSchema } from './schemas/plans.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      {name:'Plan', schema:PlanSchema}
+      {name:'Plan', schema:PlanSchema},
     ])
   ],
   providers: [PlansService],

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { IsDate, IsNotEmpty, IsUrl, Min, ValidateIf, ValidationOptions } from "class-validator";
+import { IsDate, IsNotEmpty, IsUrl, Min, ValidateIf, IsDateString,ValidationOptions } from "class-validator";
 
 export class EventDto {
   id?: string;
@@ -10,7 +10,8 @@ export class EventDto {
   description: string;
 
   @IsNotEmpty()
-  @IsDate()
+  // @IsDate()
+  @IsDateString()
   date: string;
 
   @IsUrl()

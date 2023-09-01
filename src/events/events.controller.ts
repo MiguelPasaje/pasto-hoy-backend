@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Post, Get, Query, Param, Delete, Put, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Post, Get, Query, Param, Delete, Put, NotFoundException,Res, HttpStatus } from '@nestjs/common';
 import { EventDto } from './dto/event.dto';
 import { EventsService } from './events.service';
 import { Public } from 'src/auth/public.setMetadata';
@@ -9,9 +9,15 @@ export class EventsController {
 
     constructor(private readonly service:EventsService){}
 
+    @Public()
     @Post()
-    add(@Body() event:EventDto){
-        this.service.add(event)
+    async add(@Res() res, @Body() eventDto:EventDto){
+        const event = await this.service.add(eventDto)
+        return res.status(HttpStatus.OK).json({
+            message:'successfully',
+            event
+        })
+        //this.service.add(event)
     }
 
     @Public()
