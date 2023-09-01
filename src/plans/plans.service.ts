@@ -1,43 +1,55 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { PlansDto } from './dto/plans.dto';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+
+import { Plans } from './interfaces/plans.interface';
 
 @Injectable()
 export class PlansService {
+  constructor(@InjectModel('Plan') private readonly plansModel: Model<Plans>) {}
 
-    plans: PlansDto[] = []
+  plans: PlansDto[] = [];
 
-    add(plan:PlansDto){
-        this.plans.push(plan)
-    }
+  async add(createPlan: PlansDto): Promise<Plans> {
+    const plan = new this.plansModel(createPlan);
+    return await plan.save();
+    //this.plans.push(plan)
+  }
 
-    update(id:string,plan:PlansDto){
-        const index = this.plans.findIndex((plan)=>plan.id === id)
+  async update(id: string, plan: PlansDto): Promise<Plans> {
+    const updatePlan = await this.plansModel.findByIdAndUpdate(id, plan, {
+      new: true,
+    });
+    return updatePlan;
+
+    /* const index = this.plans.findIndex((plan)=>plan.id === id)
         if (index == undefined) {
             return
         }
-        /* if (plan) { */
-            console.log(plan, index);
-            
-        //}
-        //this.plans.splice(index,1)
-        this.plans[index] = { ...this.plans[index], ...plan };
+        this.plans[index] = { ...this.plans[index], ...plan }; */
+  }
 
+  async get(page: number, pageSize: number): Promise<Plans[]> {
+    console.log(page, pageSize);
+    const plans = await this.plansModel.find();
+    return plans;
+  }
+
+  async getById(id: string): Promise<Plans | undefined> {
+    try {
+      const plan = await this.plansModel.findById(id).exec();
+      return plan;
+    } catch (error) {
+      return undefined;
     }
+    //return this.plans.find((e)=> e.id == id)
+  }
 
-    get(page:number, pageSize: number): PlansDto[]{
-        console.log(page,pageSize);
-        
-        return this.plans
-    }
-
-    getById(id: string): PlansDto | undefined{
-        return this.plans.find((e)=> e.id == id)
-    }
-
-    delete(id:string){
-        this.plans = this.plans.filter((plan) => plan.id !== id)
-    }
-    
-
+  async delete(id: string): Promise<Plans> {
+    const deletePlan = await this.plansModel.findByIdAndDelete(id);
+    return deletePlan;
+    // this.plans = this.plans.filter((plan) => plan.id !== id)
+  }
 }
